@@ -11,10 +11,16 @@
 <script setup lang="ts">
 import { reactive, onMounted, defineExpose } from 'vue'
 import { getProducts } from '../api'
-import 'element-plus/theme-chalk/index.css'
+import 'element-plus/dist/index.css'
+
+interface Item {
+    id: number
+    title: string
+    description: string
+}
 
 const state = reactive({
-    items: [],
+    items: [] as Item[],
 })
 
 onMounted(async () => {

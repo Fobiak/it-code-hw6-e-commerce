@@ -1,19 +1,19 @@
-const BASE_URL = 'https://fakestoreapi.com'
+import axios from 'axios';
+
+const BASE_URL = 'https://api.escuelajs.co/api/v1';
 
 interface Product {
-    id: number
-    title: string
-    description: string
+    id: number;
+    title: string;
+    description: string;
 }
 
 export async function getProducts(): Promise<Product[]> {
-    const response = await fetch(`${BASE_URL}/products`)
-    const products = await response.json()
-    return products
+    const response = await axios.get<Product[]>(`${BASE_URL}/products`);
+    return response.data;
 }
 
 export async function getProduct(id: number): Promise<Product> {
-    const response = await fetch(`${BASE_URL}/products/${id}`)
-    const product = await response.json()
-    return product
+    const response = await axios.get<Product>(`${BASE_URL}/products/${id}`);
+    return response.data;
 }

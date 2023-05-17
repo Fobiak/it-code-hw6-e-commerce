@@ -9,7 +9,7 @@
 import { reactive, onMounted, defineExpose } from 'vue'
 import { useRoute } from 'vue-router'
 import { getProduct } from '../api'
-import 'element-plus/theme-chalk/index.css'
+import 'element-plus/dist/index.css'
 
 interface Item {
     id: number
@@ -24,7 +24,8 @@ const state = reactive({
 const route = useRoute()
 
 onMounted(async () => {
-    state.item = await getProduct(Number(route.params.id))
+    const id = Number(route.params.id)
+    state.item = await getProduct(id)
 })
 
 defineExpose({
