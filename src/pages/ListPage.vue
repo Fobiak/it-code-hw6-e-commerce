@@ -9,8 +9,9 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted } from 'vue'
+import { reactive, onMounted, defineExpose } from 'vue'
 import { getProducts } from '../api'
+import 'element-plus/theme-chalk/index.css'
 
 const state = reactive({
     items: [],
@@ -19,16 +20,30 @@ const state = reactive({
 onMounted(async () => {
     state.items = await getProducts()
 })
+
+defineExpose({
+    state,
+})
 </script>
 
-<script lang="ts">
-import {state} from "vue-tsc/out/shared";
-
-export default {
-    setup() {
-        return {
-            state,
-        }
-    },
+<style lang="scss" scoped>
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
-</script>
+
+li {
+    margin-bottom: 16px;
+}
+
+router-link {
+    font-size: 24px;
+    color: #2196f3;
+    text-decoration: none;
+}
+
+router-link:hover {
+    text-decoration: underline;
+}
+</style>

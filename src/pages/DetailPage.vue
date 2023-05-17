@@ -6,9 +6,10 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted } from 'vue'
+import { reactive, onMounted, defineExpose } from 'vue'
 import { useRoute } from 'vue-router'
 import { getProduct } from '../api'
+import 'element-plus/theme-chalk/index.css'
 
 interface Item {
     id: number
@@ -25,16 +26,24 @@ const route = useRoute()
 onMounted(async () => {
     state.item = await getProduct(Number(route.params.id))
 })
+
+defineExpose({
+    state,
+})
 </script>
 
-<script lang="ts">
-import {state} from "vue-tsc/out/shared";
-
-export default {
-    setup() {
-        return {
-            state,
-        }
-    },
+<style lang="scss" scoped>
+h1 {
+    font-size: 32px;
+    margin-bottom: 16px;
 }
-</script>
+
+p {
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+.el-button {
+    margin-top: 16px;
+}
+</style>
