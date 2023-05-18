@@ -1,5 +1,6 @@
 <template>
     <div>
+        <h1>Результаты поиска: "{{ route.params.title }}"</h1>
         <ul>
             <li v-for="item in state.items" :key="item.id">
                 <router-link :to="{ name: 'detail', params: { id: item.id } }">{{ item.title }}</router-link>
@@ -10,7 +11,8 @@
 
 <script setup lang="ts">
 import { reactive, onMounted, defineExpose } from 'vue'
-import { getProducts } from '../api'
+import { useRoute } from 'vue-router'
+import { searchProducts } from '../api'
 import 'element-plus/dist/index.css'
 
 interface Item {
@@ -23,8 +25,11 @@ const state = reactive({
     items: [] as Item[],
 })
 
+const route = useRoute()
+
 onMounted(async () => {
-    state.items = await getProducts()
+    const title = route.params.title
+    state.items = await searchProducts(title)
 })
 
 defineExpose({

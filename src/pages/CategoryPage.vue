@@ -1,5 +1,6 @@
 <template>
     <div>
+        <h1>Товары категории "{{ category.name }}"</h1>
         <ul>
             <li v-for="item in state.items" :key="item.id">
                 <router-link :to="{ name: 'detail', params: { id: item.id } }">{{ item.title }}</router-link>
@@ -10,7 +11,8 @@
 
 <script setup lang="ts">
 import { reactive, onMounted, defineExpose } from 'vue'
-import { getProducts } from '../api'
+import { useRoute } from 'vue-router'
+import { getProductsByCategory } from '../api'
 import 'element-plus/dist/index.css'
 
 interface Item {
@@ -19,15 +21,24 @@ interface Item {
     description: string
 }
 
+
 const state = reactive({
     items: [] as Item[],
 })
 
+const route = useRoute()
+
+const category = reactive({
+    id: Number(route.params.id),
+    name: '',
+})
+
 onMounted(async () => {
-    state.items = await getProducts()
+    state.items = await getProductsByCategory(category.id)
 })
 
 defineExpose({
     state,
+    category,
 })
 </script>
