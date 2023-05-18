@@ -10,9 +10,9 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted, defineExpose } from 'vue'
+import { reactive, onMounted, watch, defineExpose } from 'vue'
 import { useRoute } from 'vue-router'
-import { getProductsByCategory } from '../api'
+import { getProductsByCategory, getCategories } from '../api'
 import 'element-plus/dist/index.css'
 
 interface Item {
@@ -20,7 +20,6 @@ interface Item {
     title: string
     description: string
 }
-
 
 const state = reactive({
     items: [] as Item[],
@@ -33,15 +32,33 @@ const category = reactive({
     name: '',
 })
 
+const loadProductsByCategory = async (categoryId: number) => {
+    state.items = await getProductsByCategory(categoryId)
+}
+
 onMounted(async () => {
-    state.items = await getProductsByCategory(category.id)
+    await loadCategoryName(category.id)
+    await loadProductsByCategory(category.id)
 })
+
+watch(() => route.params.id, async (newCategoryId) => {
+    category.id = Number(newCategoryId)
+    await loadCategoryName(category.id)
+    await loadProductsByCategory(category.id)
+})
+
+const loadCategoryName = async (categoryId: number) => {
+    const categories = await getCategories()
+    const foundCategory = categories.find((cat) => cat.id === categoryId)
+    category.name = foundCategory ? foundCategory.name : ''
+}
 
 defineExpose({
     state,
     category,
 })
 </script>
+
 <style lang="scss" scoped>
 h1 {
     font-size: 24px;
