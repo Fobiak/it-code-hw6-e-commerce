@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Результаты поиска: "{{ route.params.title }}"</h1>
+        <h1>Результаты поиска: "{{ searchQuery }}"</h1>
         <ul>
             <li v-for="item in state.items" :key="item.id">
                 <router-link :to="{ name: 'detail', params: { id: item.id } }">{{ item.title }}</router-link>
@@ -10,10 +10,9 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted, defineExpose } from 'vue'
+import { reactive, onMounted, watch, defineExpose } from 'vue'
 import { useRoute } from 'vue-router'
 import { searchProducts } from '../api'
-import 'element-plus/dist/index.css'
 
 interface Item {
     id: number
@@ -22,20 +21,29 @@ interface Item {
 }
 
 const state = reactive({
-    items: [] as Item[],
+    items: [] as Item[]
 })
 
 const route = useRoute()
 
-onMounted(async () => {
-    const title = route.params.title
-    state.items = await searchProducts(title)
+let searchQuery = route.params.title || ''
+const search = async () => {
+    state.items = await searchProducts(searchQuery)
+}
+
+onMounted(search)
+
+watch(() => route.params.title, () => {
+    searchQuery = route.params.title || ''
+    search()
 })
 
 defineExpose({
     state,
+    searchQuery
 })
 </script>
+
 
 <style lang="scss" scoped>
 h1 {
