@@ -31,11 +31,26 @@ const search = async () => {
     state.items = await searchProducts(searchQuery)
 }
 
-onMounted(search)
+// Добавляем функцию useDebounce
+const useDebounce = (fn: Function, delay: number) => {
+    let timeoutId: number | null = null
+    return (...args: any[]) => {
+        if (timeoutId) {
+            clearTimeout(timeoutId)
+        }
+        timeoutId = setTimeout(() => {
+            fn(...args)
+        }, delay)
+    }
+}
+
+const debouncedSearch = useDebounce(search, 300) // Откладываем выполнение функции search на 300 миллисекунд
+
+onMounted(debouncedSearch)
 
 watch(() => route.params.title, () => {
     searchQuery = route.params.title || ''
-    search()
+    debouncedSearch() // Используем debouncedSearch вместо search
 })
 
 defineExpose({
@@ -43,7 +58,6 @@ defineExpose({
     searchQuery
 })
 </script>
-
 
 <style lang="scss" scoped>
 h1 {
