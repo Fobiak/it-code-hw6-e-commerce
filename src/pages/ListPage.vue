@@ -31,3 +31,28 @@ defineExpose({
     state,
 })
 </script>
+
+<style lang="scss" scoped>
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+router-link {
+    display: inline-block;
+    padding: 8px;
+    background-color: #f5f5f5;
+    color: #333;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+router-link:hover {
+    background-color: #eee;
+}
+</style>

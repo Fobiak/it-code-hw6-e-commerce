@@ -5,8 +5,11 @@ const BASE_URL = 'https://api.escuelajs.co/api/v1';
 interface Product {
     id: number;
     title: string;
+    price: number;
     description: string;
+    images: string;
 }
+
 
 interface Category {
     id: number;

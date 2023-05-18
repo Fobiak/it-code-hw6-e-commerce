@@ -92,9 +92,13 @@ nav {
     padding: 0 16px;
 }
 
-input {
+.search-input {
     width: 200px;
     margin-right: 8px;
+}
+
+.category-select {
+    width: 200px;
 }
 
 .el-button {
