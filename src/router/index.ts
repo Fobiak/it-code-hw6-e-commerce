@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import ListPage from '../pages/ListPage.vue'
 import DetailPage from '../pages/DetailPage.vue'
+import SearchPage from '../pages/SearchPage.vue'
+import CategoryPage from '../pages/CategoryPage.vue'
 
 const routes: RouteRecordRaw[] = [
     {
@@ -12,6 +14,16 @@ const routes: RouteRecordRaw[] = [
         path: '/detail/:id',
         name: 'detail',
         component: DetailPage,
+    },
+    {
+        path: '/search/:title',
+        name: 'search',
+        component: SearchPage,
+    },
+    {
+        path: '/category/:id',
+        name: 'category',
+        component: CategoryPage,
     },
 ]
 
