@@ -5,11 +5,12 @@
                 <router-link :to="{ name: 'detail', params: { id: item.id } }">{{ item.title }}</router-link>
             </li>
         </ul>
+        <div ref="observerTarget" style="width: 100%; height: 1px;"></div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted, defineExpose } from 'vue'
+import { reactive, onMounted, defineExpose, ref } from 'vue'
 import { getProducts } from '../api'
 import 'element-plus/dist/index.css'
 
@@ -23,8 +24,33 @@ const state = reactive({
     items: [] as Item[],
 })
 
-onMounted(async () => {
-    state.items = await getProducts()
+const observerTarget = ref(null)
+
+const loadItems = async () => {
+    const newItems = await getProducts()
+    state.items.push(...newItems)
+}
+
+const initObserver = () => {
+    const options = {
+        root: null as Element | null,
+        rootMargin: '0px',
+        threshold: 1.0,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+            loadItems();
+        }
+    }, options as IntersectionObserverInit);
+
+    observer.observe(observerTarget.value as Element);
+};
+
+
+onMounted(() => {
+    loadItems()
+    initObserver()
 })
 
 defineExpose({
