@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import { ref, computed, defineExpose, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getCategories } from '../api'
+import { getCategories } from '../services/api/rest/api'
 import 'element-plus/theme-chalk/index.css'
 
 const route = useRoute()

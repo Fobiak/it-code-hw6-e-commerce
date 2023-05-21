@@ -10,7 +10,6 @@ interface Product {
     images: string;
 }
 
-
 interface Category {
     id: number;
     name: string;

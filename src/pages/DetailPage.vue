@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { reactive, onMounted, defineExpose } from 'vue'
 import { useRoute } from 'vue-router'
-import { getProduct } from '../api'
+import { getProduct } from '../services/api/rest/api'
 import 'element-plus/dist/index.css'
 
 interface Item {

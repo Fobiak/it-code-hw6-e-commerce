@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { reactive, onMounted, watch, defineExpose } from 'vue'
 import { useRoute } from 'vue-router'
-import { getProductsByCategory, getCategories } from '../api'
+import { getProductsByCategory, getCategories } from '../services/api/rest/api'
 import 'element-plus/dist/index.css'
 
 interface Item {

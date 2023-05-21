@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { reactive, onMounted, watch, defineExpose } from 'vue'
 import { useRoute } from 'vue-router'
-import { searchProducts } from '../api'
+import { searchProducts } from '../services/api/rest/api'
 
 interface Item {
     id: number
