@@ -2,8 +2,6 @@ import { defineStore } from 'pinia';
 import { api } from '../services/api';
 import {Category} from "../types/category";
 import { Item } from '../types/Item'
-import { useRouter } from 'vue-router';
-const $router = useRouter();
 
 export const useECommerceStore = defineStore('e-commerce', {
     state: () => ({
@@ -20,16 +18,9 @@ export const useECommerceStore = defineStore('e-commerce', {
             this.showFilter = !this.showFilter;
         },
 
-        async search() {
-            if (this.searchQuery) {
-                await $router.push(`/search/${this.searchQuery}`);
-            }
-        },
-
-        async filterByCategory() {
-            if (this.selectedCategory) {
-                await $router.push(`/category/${this.selectedCategory}`);
-            }
+        async fetchSearchProducts (title: string) {
+            const response = await api.fetchSearchProducts(title);
+            this.items = response.data;
         },
 
         async fetchCategories() {

@@ -18,8 +18,8 @@ import { useECommerceStore } from '../store/e-commerce-store'
 const store = useECommerceStore()
 const route = useRoute()
 
-const search = async () => {
-    await store.search()
+const searchProduct = async () => {
+    await store.fetchSearchProducts(store.searchQuery)
 }
 
 const useDebounce = (fn: Function, delay: number) => {
@@ -34,18 +34,16 @@ const useDebounce = (fn: Function, delay: number) => {
     }
 }
 
-const debouncedSearch = useDebounce(search, 300)
+const debouncedSearch = useDebounce(searchProduct, 300)
 
 onMounted(debouncedSearch)
 
-watch(() => route.params.query, (query) => {
-    if (typeof query === "string") {
-        store.searchQuery = query;
+watch(() => route.params.title, (title) => {
+    if (typeof title === "string") {
+        store.searchQuery = title;
         debouncedSearch();
     }
 })
-
-
 
 defineExpose({
     store,

@@ -39,11 +39,10 @@ watch(() => route.params.id, async (newCategoryId) => {
 })
 
 const loadCategoryName = async (categoryId: number) => {
-    await store.fetchCategories() // Загрузите категории из хранилища
-    const foundCategory = store.categories.find((cat) => cat.id === categoryId) // Используйте store.categories
+    await store.fetchCategories()
+    const foundCategory = store.categories.find((cat) => cat.id === categoryId)
     category.name = foundCategory ? foundCategory.name : ''
 }
-
 
 defineExpose({
     store,

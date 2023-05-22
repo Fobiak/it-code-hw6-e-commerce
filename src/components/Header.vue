@@ -2,20 +2,20 @@
     <header>
         <nav>
             <el-input
-                v-model="searchQuery"
+                v-model="store.searchQuery"
                 placeholder="Поиск..."
                 @keyup.enter="search"
                 style="width: 200px"
             ></el-input>
             <el-button type="primary" @click="search">Найти</el-button>
-            <el-button type="text" @click="store.toggleFilter">Фильтр</el-button>
+            <el-button type="text" @click="store.toggleFilter()">Фильтр</el-button>
             <el-button v-if="showListButton" type="text" @click="$router.push('/')">Список элементов</el-button>
             <el-select
                 v-model="store.selectedCategory"
                 placeholder="Выберите категорию"
                 style="width: 200px"
-                @change="store.filterByCategory"
-                v-show="showFilter"
+                @change="filterByCategory"
+                v-show="store.showFilter"
             >
                 <el-option
                     v-for="category in store.categories"
@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineExpose, onMounted } from 'vue';
+import {  computed, defineExpose, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import 'element-plus/theme-chalk/index.css';
 import { useECommerceStore } from '../store/e-commerce-store';
@@ -40,6 +40,18 @@ const store = useECommerceStore();
 
 const showListButton = computed(() => route.name !== 'list')
 
+const search = () => {
+    if (store.searchQuery) {
+        $router.push(`/search/${store.searchQuery}`)
+    }
+}
+
+const filterByCategory = () => {
+    if (store.selectedCategory) {
+        $router.push(`/category/${store.selectedCategory}`)
+    }
+}
+
 onMounted(async () => {
     await store.fetchCategories();
 });
@@ -47,10 +59,8 @@ onMounted(async () => {
 defineExpose({
     searchQuery: store.searchQuery,
     selectedCategory: store.selectedCategory,
-    toggleFilter: store.toggleFilter,
-    search: store.search,
-    filterByCategory: store.filterByCategory,
-    showFilter: store.showFilter,
+    search,
+    filterByCategory,
     categories: store.categories,
 });
 </script>
