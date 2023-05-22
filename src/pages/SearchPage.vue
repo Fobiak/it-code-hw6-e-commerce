@@ -1,37 +1,27 @@
 <template>
     <div>
-        <h1>Результаты поиска: "{{ searchQuery }}"</h1>
+        <h1>Результаты поиска: "{{ store.searchQuery }}"</h1>
         <ul>
-            <li v-for="item in state.items" :key="item.id">
+            <li v-for="item in store.items" :key="item.id">
                 <router-link :to="{ name: 'detail', params: { id: item.id } }">{{ item.title }}</router-link>
             </li>
         </ul>
     </div>
 </template>
 
+
 <script setup lang="ts">
-import { reactive, onMounted, watch, defineExpose } from 'vue'
+import { onMounted, watch, defineExpose } from 'vue'
 import { useRoute } from 'vue-router'
-import { searchProducts } from '../services/api/rest/api'
+import { useECommerceStore } from '../store/e-commerce-store'
 
-interface Item {
-    id: number
-    title: string
-    description: string
-}
-
-const state = reactive({
-    items: [] as Item[]
-})
-
+const store = useECommerceStore()
 const route = useRoute()
 
-let searchQuery = route.params.title || ''
 const search = async () => {
-    state.items = await searchProducts(searchQuery)
+    await store.search()
 }
 
-// Добавляем функцию useDebounce
 const useDebounce = (fn: Function, delay: number) => {
     let timeoutId: number | null = null
     return (...args: any[]) => {
@@ -44,20 +34,25 @@ const useDebounce = (fn: Function, delay: number) => {
     }
 }
 
-const debouncedSearch = useDebounce(search, 300) // Откладываем выполнение функции search на 300 миллисекунд
+const debouncedSearch = useDebounce(search, 300)
 
 onMounted(debouncedSearch)
 
-watch(() => route.params.title, () => {
-    searchQuery = route.params.title || ''
-    debouncedSearch() // Используем debouncedSearch вместо search
+watch(() => route.params.query, (query) => {
+    if (typeof query === "string") {
+        store.searchQuery = query;
+        debouncedSearch();
+    }
 })
 
+
+
 defineExpose({
-    state,
-    searchQuery
+    store,
+    searchQuery: store.searchQuery
 })
 </script>
+
 
 <style lang="scss" scoped>
 h1 {

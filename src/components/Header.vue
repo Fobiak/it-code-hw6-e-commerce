@@ -8,17 +8,17 @@
                 style="width: 200px"
             ></el-input>
             <el-button type="primary" @click="search">Найти</el-button>
-            <el-button type="text" @click="toggleFilter">Фильтр</el-button>
+            <el-button type="text" @click="store.toggleFilter">Фильтр</el-button>
             <el-button v-if="showListButton" type="text" @click="$router.push('/')">Список элементов</el-button>
             <el-select
-                v-model="selectedCategory"
+                v-model="store.selectedCategory"
                 placeholder="Выберите категорию"
                 style="width: 200px"
-                @change="filterByCategory"
+                @change="store.filterByCategory"
                 v-show="showFilter"
             >
                 <el-option
-                    v-for="category in categories"
+                    v-for="category in store.categories"
                     :key="category.id"
                     :label="category.name"
                     :value="category.id"
@@ -29,54 +29,31 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, defineExpose, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { getCategories } from '../services/api/rest/api'
-import 'element-plus/theme-chalk/index.css'
+import { computed, defineExpose, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import 'element-plus/theme-chalk/index.css';
+import { useECommerceStore } from '../store/e-commerce-store';
 
-const route = useRoute()
-const $router = useRouter()
-
-const searchQuery = ref('')
-const selectedCategory = ref('')
-const showFilter = ref(false)
-const categories = ref([])
+const route = useRoute();
+const $router = useRouter();
+const store = useECommerceStore();
 
 const showListButton = computed(() => route.name !== 'list')
 
-const toggleFilter = () => {
-    showFilter.value = !showFilter.value
-}
-
-const search = () => {
-    if (searchQuery.value) {
-        $router.push(`/search/${searchQuery.value}`)
-    }
-}
-
-const filterByCategory = () => {
-    if (selectedCategory.value) {
-        $router.push(`/category/${selectedCategory.value}`)
-    }
-}
-
 onMounted(async () => {
-    categories.value = await getCategories()
-})
+    await store.fetchCategories();
+});
 
 defineExpose({
-    showListButton,
-    searchQuery,
-    selectedCategory,
-    toggleFilter,
-    search,
-    filterByCategory,
-    showFilter,
-    categories,
-})
+    searchQuery: store.searchQuery,
+    selectedCategory: store.selectedCategory,
+    toggleFilter: store.toggleFilter,
+    search: store.search,
+    filterByCategory: store.filterByCategory,
+    showFilter: store.showFilter,
+    categories: store.categories,
+});
 </script>
-
-
 
 <style lang="scss" scoped>
 header {

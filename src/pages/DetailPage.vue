@@ -1,44 +1,35 @@
 <template>
     <div class="detail-page">
         <div class="detail-header">
-            <h1>{{ state.item.title }}</h1>
-            <p class="price">$ {{ state.item.price }}</p>
+            <h1>{{ store.item.title }}</h1>
+            <p class="price">$ {{ store.item.price }}</p>
         </div>
         <div class="detail-content">
-            <img class="image" :src="state.item.images" alt="Item Image" />
-            <p class="description">{{ state.item.description }}</p>
+            <img class="image" :src="store.item.images" alt="Item Image" />
+            <p class="description">{{ store.item.description }}</p>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted, defineExpose } from 'vue'
+import { defineExpose, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { getProduct } from '../services/api/rest/api'
+import { useECommerceStore } from '../store/e-commerce-store'
 import 'element-plus/dist/index.css'
 
-interface Item {
-    title: string;
-    price: number;
-    description: string;
-    images: string;
-}
-
-const state = reactive({
-    item: {} as Item,
-})
-
+const store = useECommerceStore()
 const route = useRoute()
 
 onMounted(async () => {
     const id = Number(route.params.id)
-    state.item = await getProduct(id)
+    await store.fetchProduct(id)
 })
 
 defineExpose({
-    state,
+    store,
 })
 </script>
+
 
 <style lang="scss" scoped>
 .detail-page {

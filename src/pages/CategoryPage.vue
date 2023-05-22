@@ -2,7 +2,7 @@
     <div>
         <h1>Товары категории "{{ category.name }}"</h1>
         <ul>
-            <li v-for="item in state.items" :key="item.id">
+            <li v-for="item in store.items" :key="item.id">
                 <router-link :to="{ name: 'detail', params: { id: item.id } }">{{ item.title }}</router-link>
             </li>
         </ul>
@@ -12,20 +12,11 @@
 <script setup lang="ts">
 import { reactive, onMounted, watch, defineExpose } from 'vue'
 import { useRoute } from 'vue-router'
-import { getProductsByCategory, getCategories } from '../services/api/rest/api'
+import { useECommerceStore } from '../store/e-commerce-store'
 import 'element-plus/dist/index.css'
 
-interface Item {
-    id: number
-    title: string
-    description: string
-}
-
-const state = reactive({
-    items: [] as Item[],
-})
-
 const route = useRoute()
+const store = useECommerceStore()
 
 const category = reactive({
     id: Number(route.params.id),
@@ -33,7 +24,7 @@ const category = reactive({
 })
 
 const loadProductsByCategory = async (categoryId: number) => {
-    state.items = await getProductsByCategory(categoryId)
+    await store.fetchProductsByCategory(categoryId)
 }
 
 onMounted(async () => {
@@ -48,13 +39,14 @@ watch(() => route.params.id, async (newCategoryId) => {
 })
 
 const loadCategoryName = async (categoryId: number) => {
-    const categories = await getCategories()
-    const foundCategory = categories.find((cat) => cat.id === categoryId)
+    await store.fetchCategories() // Загрузите категории из хранилища
+    const foundCategory = store.categories.find((cat) => cat.id === categoryId) // Используйте store.categories
     category.name = foundCategory ? foundCategory.name : ''
 }
 
+
 defineExpose({
-    state,
+    store,
     category,
 })
 </script>
