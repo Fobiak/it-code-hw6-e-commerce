@@ -1,7 +1,7 @@
 <template>
     <div>
         <ul>
-            <li v-for="item in state.items" :key="item.id">
+            <li v-for="item in store.items" :key="item.id">
                 <router-link :to="{ name: 'detail', params: { id: item.id } }">{{ item.title }}</router-link>
             </li>
         </ul>
@@ -10,25 +10,16 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted, defineExpose, ref } from 'vue'
-import { getProducts } from '../api'
+import { defineExpose, onMounted, ref } from 'vue'
+import { useECommerceStore } from '../store/e-commerce-store'
 import 'element-plus/dist/index.css'
 
-interface Item {
-    id: number
-    title: string
-    description: string
-}
-
-const state = reactive({
-    items: [] as Item[],
-})
+const store = useECommerceStore()
 
 const observerTarget = ref(null)
 
 const loadItems = async () => {
-    const newItems = await getProducts()
-    state.items.push(...newItems)
+    await store.loadItems()
 }
 
 const initObserver = () => {
@@ -47,16 +38,16 @@ const initObserver = () => {
     observer.observe(observerTarget.value as Element);
 };
 
-
 onMounted(() => {
     loadItems()
     initObserver()
 })
 
 defineExpose({
-    state,
+    store,
 })
 </script>
+
 
 <style lang="scss" scoped>
 ul {
