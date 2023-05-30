@@ -74,7 +74,9 @@ li {
     margin-bottom: 8px;
     border: 2px solid #ccc;
     border-radius: 10px;
-    font-family: "Times New Roman", sans-serif;
+    font-family: "monospace";
+    font-size: 18px;
+    text-indent: 10px;
 }
 
 router-link {
