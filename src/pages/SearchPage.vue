@@ -60,19 +60,32 @@ h1 {
 
 ul {
     list-style-type: none;
-    padding: 0;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
 li {
     margin-bottom: 8px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    font-family: "Times New Roman", sans-serif;
 }
 
 router-link {
-    color: #2196f3;
+    display: inline-block;
+    padding: 16px;
+    background-color: #f5f5f5;
+    color: #333;
     text-decoration: none;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 router-link:hover {
-    text-decoration: underline;
+    background-color: #eee;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 </style>
